@@ -1,0 +1,8 @@
+/* App-level overrides — keep minimal, most styling lives in Tailwind */
+
+/* Hide default cursor on desktop — custom cursor replaces it */
+@media (hover: hover) and (pointer: fine) {
+  * {
+    cursor: none !important;
+  }
+}
