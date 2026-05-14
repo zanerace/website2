@@ -1,21 +1,19 @@
 import { useCallback, useEffect, useState } from 'react';
 
 interface NavigationProps {
-  lenisRef: React.MutableRefObject<any>;
+  onNavigate: (target: string) => void;
 }
 
-export default function Navigation({ lenisRef }: NavigationProps) {
+export default function Navigation({ onNavigate }: NavigationProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const scrollTo = useCallback(
     (target: string) => {
       setMobileOpen(false);
-      if (lenisRef.current) {
-        lenisRef.current.scrollTo(target, { duration: 1.2, offset: -80 });
-      }
+      onNavigate(target);
     },
-    [lenisRef],
+    [onNavigate],
   );
 
   useEffect(() => {
@@ -42,7 +40,6 @@ export default function Navigation({ lenisRef }: NavigationProps) {
     { label: 'SERVICES', target: '#services' },
     { label: 'PROCESS', target: '#process' },
     { label: 'PRICING', target: '#pricing' },
-    { label: 'TESTIMONIALS', target: '#testimonials' },
     { label: 'CONTACT', target: '#contact' },
   ];
 
@@ -55,7 +52,7 @@ export default function Navigation({ lenisRef }: NavigationProps) {
             : 'bg-transparent border-b border-transparent'
         }`}
       >
-        <div className="max-w-7xl mx-auto flex items-center justify-between h-20 px-6 lg:px-12">
+        <div className="max-w-7xl mx-auto flex items-center justify-between h-20 min-h-[3.5rem] pl-[max(1.5rem,env(safe-area-inset-left))] pr-[max(1.5rem,env(safe-area-inset-right))] lg:pl-12 lg:pr-12">
           {/* Logo */}
           <button
             onClick={() => scrollTo('#hero')}
@@ -83,7 +80,7 @@ export default function Navigation({ lenisRef }: NavigationProps) {
             <div className="w-px h-6 bg-white/10 mx-3" />
             <button
               onClick={() => scrollTo('#contact')}
-              className="font-grotesk font-medium text-black bg-gold hover:bg-gold-hover text-[13px] tracking-[0.08em] px-6 py-2.5 rounded-full transition-all duration-300 hover:shadow-glow"
+              className="font-grotesk font-medium text-black bg-gold hover:bg-gold-hover text-[13px] tracking-[0.08em] px-6 py-2.5 min-h-[44px] rounded-full transition-all duration-300 hover:shadow-glow inline-flex items-center justify-center"
             >
               GET AUDIT
             </button>
@@ -132,7 +129,7 @@ export default function Navigation({ lenisRef }: NavigationProps) {
           mobileOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
-        <div className="flex flex-col h-full p-8">
+        <div className="flex flex-col h-full p-8 pb-[max(2rem,env(safe-area-inset-bottom))]">
           <nav className="flex flex-col gap-1 flex-1">
             {navLinks.map((link, i) => (
               <button

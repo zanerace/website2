@@ -1,7 +1,7 @@
 /* App-level overrides — keep minimal, most styling lives in Tailwind */
 
-/* Hide default cursor on desktop — custom cursor replaces it */
-@media (hover: hover) and (pointer: fine) {
+/* Hide default cursor on desktop only when motion is OK (custom cursor handles UX) */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
   * {
     cursor: none !important;
   }

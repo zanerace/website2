@@ -1,8 +1,5 @@
 import { lazy, Suspense } from 'react';
-
-const prefersReducedMotion =
-  typeof window !== 'undefined' &&
-  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+import { usePrefersReducedMotion } from '../hooks/useViewportPreferences';
 
 const HeroCanvas = lazy(() => import('./HeroCanvas'));
 
@@ -11,6 +8,7 @@ interface HeroSectionProps {
 }
 
 export default function HeroSection({ onScrollTo }: HeroSectionProps) {
+  const prefersReducedMotion = usePrefersReducedMotion();
   const marqueeText =
     'WEBSITES · PHOTOS · MENUS · SOCIAL PAGES · GOOGLE LISTINGS · BRAND CONSISTENCY · ';
 
@@ -39,11 +37,11 @@ export default function HeroSection({ onScrollTo }: HeroSectionProps) {
       />
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 max-w-5xl mx-auto pt-24">
+      <div className="relative z-10 flex flex-col items-center justify-center text-center pl-[max(1.25rem,env(safe-area-inset-left))] pr-[max(1.25rem,env(safe-area-inset-right))] max-w-5xl mx-auto pt-24 sm:pt-28">
         {/* Availability badge */}
         <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-white/[0.08] bg-white/[0.03] backdrop-blur-sm mb-10">
           <span className="relative flex h-2 w-2">
-            <span className="absolute inset-0 rounded-full bg-gold animate-ping opacity-75" />
+            <span className="absolute inset-0 rounded-full bg-gold animate-ping motion-reduce:animate-none opacity-75" />
             <span className="relative inline-flex h-2 w-2 rounded-full bg-gold" />
           </span>
           <span className="font-grotesk text-[11px] tracking-[0.2em] text-white/70 uppercase">
@@ -68,16 +66,16 @@ export default function HeroSection({ onScrollTo }: HeroSectionProps) {
         </p>
 
         {/* CTAs */}
-        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full max-w-md sm:max-w-none sm:w-auto">
           <button
             onClick={() => onScrollTo('#contact')}
-            className="group relative font-grotesk font-medium text-black bg-gold hover:bg-gold-hover text-[15px] tracking-[0.04em] px-10 py-4.5 rounded-full transition-all duration-300 hover:shadow-glow-lg overflow-hidden"
+            className="group relative font-grotesk font-medium text-black bg-gold hover:bg-gold-hover text-[15px] tracking-[0.04em] px-8 sm:px-10 py-3.5 sm:py-4 min-h-[48px] rounded-full transition-all duration-300 hover:shadow-glow-lg overflow-hidden inline-flex items-center justify-center"
           >
             <span className="relative z-10">Get a free audit</span>
           </button>
           <button
             onClick={() => onScrollTo('#services')}
-            className="group font-grotesk font-medium text-white/90 border border-white/15 hover:border-gold/50 hover:text-gold text-[15px] tracking-[0.04em] px-10 py-4.5 rounded-full transition-all duration-300 hover:bg-gold/[0.04]"
+            className="group font-grotesk font-medium text-white/90 border border-white/15 hover:border-gold/50 hover:text-gold text-[15px] tracking-[0.04em] px-8 sm:px-10 py-3.5 sm:py-4 min-h-[48px] rounded-full transition-all duration-300 hover:bg-gold/[0.04] inline-flex items-center justify-center"
           >
             <span className="flex items-center justify-center gap-2">
               See services
@@ -125,7 +123,7 @@ export default function HeroSection({ onScrollTo }: HeroSectionProps) {
       </div>
 
       {/* Bottom Marquee */}
-      <div className="absolute bottom-0 left-0 right-0 z-10 border-t border-white/[0.04] py-4 overflow-hidden">
+      <div className="absolute bottom-0 left-0 right-0 z-10 border-t border-white/[0.04] py-3 sm:py-4 overflow-hidden pb-[max(0.75rem,env(safe-area-inset-bottom))]">
         <div className="flex whitespace-nowrap animate-marquee will-change-transform">
           <span className="font-grotesk text-[11px] tracking-[0.35em] text-white/20 uppercase">
             {marqueeText.repeat(6)}
@@ -137,7 +135,7 @@ export default function HeroSection({ onScrollTo }: HeroSectionProps) {
       </div>
 
       {/* Scroll indicator */}
-      <div className="absolute bottom-14 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2">
+      <div className="absolute bottom-12 sm:bottom-14 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 max-[896px]:landscape:hidden">
         <span className="font-grotesk text-[10px] tracking-[0.3em] text-white/25 uppercase">
           Scroll
         </span>

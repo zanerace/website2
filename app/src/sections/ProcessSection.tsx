@@ -109,12 +109,12 @@ export default memo(function ProcessSection() {
     <section
       ref={sectionRef}
       id="process"
-      className="relative py-32 md:py-44 bg-black overflow-hidden"
+      className="relative py-24 sm:py-32 md:py-44 bg-black overflow-hidden"
     >
       {/* Section divider */}
       <div className="section-divider absolute top-0 inset-x-0" />
 
-      <div className="max-w-6xl mx-auto px-6">
+      <div className="max-w-6xl mx-auto pl-[max(1.25rem,env(safe-area-inset-left))] pr-[max(1.25rem,env(safe-area-inset-right))] sm:px-6">
         {/* Header */}
         <div className="reveal-process text-center mb-20">
           <div className="flex items-center justify-center gap-3 mb-5">

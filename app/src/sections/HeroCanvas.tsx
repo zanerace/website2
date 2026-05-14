@@ -1,7 +1,8 @@
-import { useRef, useMemo } from 'react';
+import { useRef, useMemo, useState, useEffect } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Text } from '@react-three/drei';
 import * as THREE from 'three';
+import { useResponsiveCanvasDpr } from '../hooks/useViewportPreferences';
 
 function ChromaticTextMesh() {
   const groupRef = useRef<THREE.Group>(null);
@@ -122,9 +123,8 @@ function ChromaticTextMesh() {
   );
 }
 
-function FloatingParticles() {
+function FloatingParticles({ count }: { count: number }) {
   const pointsRef = useRef<THREE.Points>(null);
-  const count = 100;
 
   const [positions, velocities] = useMemo(() => {
     const pos = new Float32Array(count * 3);
@@ -138,7 +138,7 @@ function FloatingParticles() {
       vel[i * 3 + 2] = (Math.random() - 0.5) * 0.001;
     }
     return [pos, vel];
-  }, []);
+  }, [count]);
 
   useFrame(() => {
     if (!pointsRef.current) return;
@@ -175,19 +175,35 @@ function FloatingParticles() {
   );
 }
 
-const maxDpr = Math.min(window.devicePixelRatio, 2);
-
 export default function HeroCanvas() {
+  const maxDpr = useResponsiveCanvasDpr();
+  const [particleCount, setParticleCount] = useState(100);
+
+  useEffect(() => {
+    const update = () => {
+      setParticleCount(window.innerWidth < 640 ? 48 : window.innerWidth < 1024 ? 72 : 100);
+    };
+    update();
+    window.addEventListener('resize', update, { passive: true });
+    return () => window.removeEventListener('resize', update);
+  }, []);
+
   return (
     <Canvas
       camera={{ position: [0, 0, 5], fov: 50 }}
       dpr={[1, maxDpr]}
-      gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
+      gl={{
+        antialias: false,
+        alpha: true,
+        powerPreference: 'high-performance',
+        stencil: false,
+        depth: true,
+      }}
       style={{ background: 'transparent' }}
     >
       <ambientLight intensity={0.5} />
       <ChromaticTextMesh />
-      <FloatingParticles />
+      <FloatingParticles count={particleCount} />
     </Canvas>
   );
 }

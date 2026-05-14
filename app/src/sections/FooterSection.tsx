@@ -12,7 +12,7 @@ export default memo(function FooterSection({ onScrollTo }: FooterProps) {
         { label: 'Services', target: '#services' },
         { label: 'Process', target: '#process' },
         { label: 'Pricing', target: '#pricing' },
-        { label: 'Testimonials', target: '#testimonials' },
+        { label: 'Contact', target: '#contact' },
       ],
     },
     {
@@ -68,7 +68,7 @@ export default memo(function FooterSection({ onScrollTo }: FooterProps) {
   return (
     <footer className="relative bg-black border-t border-white/[0.04]">
       {/* Main footer */}
-      <div className="max-w-6xl mx-auto px-6 pt-16 md:pt-20 pb-8">
+      <div className="max-w-6xl mx-auto pl-[max(1.25rem,env(safe-area-inset-left))] pr-[max(1.25rem,env(safe-area-inset-right))] sm:px-6 pt-16 md:pt-20 pb-8">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8 mb-16">
           {/* Brand column */}
           <div className="md:col-span-5">
@@ -179,7 +179,7 @@ export default memo(function FooterSection({ onScrollTo }: FooterProps) {
       {/* Back to top */}
       <button
         onClick={() => onScrollTo('#hero')}
-        className="fixed bottom-6 right-6 z-40 w-10 h-10 rounded-full bg-white/[0.05] border border-white/[0.08] flex items-center justify-center text-white/30 hover:text-gold hover:border-gold/30 transition-all duration-300 backdrop-blur-sm"
+        className="fixed z-40 w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-white/[0.05] border border-white/[0.08] flex items-center justify-center text-white/30 hover:text-gold hover:border-gold/30 transition-all duration-300 backdrop-blur-sm bottom-[max(1.25rem,env(safe-area-inset-bottom))] right-[max(1.25rem,env(safe-area-inset-right))]"
         aria-label="Back to top"
       >
         <svg

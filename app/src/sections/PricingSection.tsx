@@ -124,11 +124,11 @@ export default memo(function PricingSection({ onScrollTo }: PricingSectionProps)
     <section
       ref={sectionRef}
       id="pricing"
-      className="relative py-32 md:py-44 bg-black overflow-hidden"
+      className="relative py-24 sm:py-32 md:py-44 bg-black overflow-hidden"
     >
       <div className="section-divider absolute top-0 inset-x-0" />
 
-      <div className="max-w-6xl mx-auto px-6">
+      <div className="max-w-6xl mx-auto pl-[max(1.25rem,env(safe-area-inset-left))] pr-[max(1.25rem,env(safe-area-inset-right))] sm:px-6">
         {/* Header */}
         <div className="text-center mb-16 md:mb-20">
           <div className="reveal-header flex items-center justify-center gap-3 mb-5">
@@ -222,7 +222,7 @@ export default memo(function PricingSection({ onScrollTo }: PricingSectionProps)
 
               <button
                 onClick={() => onScrollTo('#contact')}
-                className={`w-full font-grotesk font-medium text-[15px] tracking-wide py-4 px-6 rounded-full transition-all duration-300 ${
+                className={`w-full font-grotesk font-medium text-[15px] tracking-wide py-4 min-h-[48px] px-6 rounded-full transition-all duration-300 inline-flex items-center justify-center ${
                   tier.highlighted
                     ? 'bg-gold text-black hover:bg-gold-hover hover:shadow-glow-lg'
                     : 'bg-white/[0.04] text-white/80 hover:bg-white/[0.08] hover:text-white border border-white/[0.08] hover:border-white/15'

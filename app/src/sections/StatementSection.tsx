@@ -36,7 +36,7 @@ export default memo(function StatementSection() {
   );
 
   return (
-    <section ref={sectionRef} className="relative py-32 md:py-44 bg-black overflow-hidden">
+    <section ref={sectionRef} className="relative py-24 sm:py-32 md:py-44 bg-black overflow-hidden">
       {/* Subtle top glow */}
       <div
         className="absolute inset-x-0 top-0 h-px"
@@ -45,7 +45,7 @@ export default memo(function StatementSection() {
         }}
       />
 
-      <div className="max-w-6xl mx-auto px-6">
+      <div className="max-w-6xl mx-auto pl-[max(1.25rem,env(safe-area-inset-left))] pr-[max(1.25rem,env(safe-area-inset-right))] sm:px-6">
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-20 items-start">
           {/* Left eyebrow column */}
           <div className="lg:col-span-4">
@@ -59,19 +59,28 @@ export default memo(function StatementSection() {
               </span>
             </div>
 
-            {/* Stats on desktop */}
+            {/* Principles — no unverified statistics */}
             <div className="reveal-text hidden lg:flex flex-col gap-8 mt-12">
               {[
-                { stat: '75%', label: 'of consumers judge credibility by website design' },
-                { stat: '3s', label: 'to make a first impression online' },
-                { stat: '88%', label: 'won’t return after a bad experience' },
+                {
+                  title: 'People skim first',
+                  body: 'Your website, photos, listing, and social are usually judged before a phone call or visit.',
+                },
+                {
+                  title: 'Consistency builds trust',
+                  body: 'When those touchpoints look mismatched or neglected, doubt creeps in fast.',
+                },
+                {
+                  title: 'You stay focused on the shop',
+                  body: 'I handle the visible online cleanup so it matches how good you already are in person.',
+                },
               ].map((item) => (
-                <div key={item.stat} className="flex items-start gap-4">
-                  <span className="font-clash font-semibold text-gold text-3xl leading-none">
-                    {item.stat}
+                <div key={item.title} className="flex flex-col gap-2">
+                  <span className="font-grotesk font-medium text-gold/90 text-sm tracking-wide">
+                    {item.title}
                   </span>
-                  <span className="font-grotesk font-light text-white/40 text-sm leading-snug max-w-[200px]">
-                    {item.label}
+                  <span className="font-grotesk font-light text-white/40 text-sm leading-snug max-w-[240px]">
+                    {item.body}
                   </span>
                 </div>
               ))}
@@ -100,19 +109,17 @@ export default memo(function StatementSection() {
               &mdash; I fix what customers actually see.
             </p>
 
-            {/* Mobile stats */}
-            <div className="reveal-text lg:hidden flex flex-wrap gap-6 mt-10 pt-8 border-t border-white/[0.06]">
+            {/* Mobile: same ideas, compact */}
+            <div className="reveal-text lg:hidden flex flex-col gap-5 mt-10 pt-8 border-t border-white/[0.06]">
               {[
-                { stat: '75%', label: 'judge by design' },
-                { stat: '3s', label: 'first impression' },
-                { stat: '88%', label: 'won’t return' },
+                { title: 'Skim first', body: 'Site, photos, listing, social — judged early.' },
+                { title: 'Consistency', body: 'Mismatched visuals cost trust fast.' },
+                { title: 'You run the business', body: 'I clean up what customers see online.' },
               ].map((item) => (
-                <div key={item.stat} className="flex items-center gap-3">
-                  <span className="font-clash font-semibold text-gold text-2xl">
-                    {item.stat}
-                  </span>
-                  <span className="font-grotesk font-light text-white/35 text-xs leading-tight">
-                    {item.label}
+                <div key={item.title} className="flex flex-col gap-1">
+                  <span className="font-grotesk font-medium text-gold/90 text-sm">{item.title}</span>
+                  <span className="font-grotesk font-light text-white/35 text-sm leading-snug">
+                    {item.body}
                   </span>
                 </div>
               ))}

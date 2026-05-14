@@ -5,7 +5,9 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const FORMSPREE_ID = 'YOUR_FORMSPREE_ID';
+const FORMSPREE_ID = (import.meta.env.VITE_FORMSPREE_ID ?? '').trim();
+const CONTACT_EMAIL =
+  (import.meta.env.VITE_CONTACT_EMAIL ?? 'hello@racedigital.com').trim();
 
 export default memo(function AuditFooterSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -45,6 +47,14 @@ export default memo(function AuditFooterSection() {
     setSubmitting(true);
     setError('');
 
+    if (!FORMSPREE_ID) {
+      setError(
+        `Form is not connected yet. Add VITE_FORMSPREE_ID in Vercel (see .env.example), or email ${CONTACT_EMAIL} directly.`,
+      );
+      setSubmitting(false);
+      return;
+    }
+
     const form = e.currentTarget;
     const data = new FormData(form);
 
@@ -55,11 +65,20 @@ export default memo(function AuditFooterSection() {
         headers: { Accept: 'application/json' },
       });
 
-      if (res.ok) {
+      const json = (await res.json().catch(() => null)) as {
+        ok?: boolean;
+        error?: string;
+      } | null;
+
+      if (res.ok && json?.ok !== false) {
         setSubmitted(true);
         form.reset();
       } else {
-        setError('Something went wrong. Please try again or email directly.');
+        const msg =
+          typeof json?.error === 'string' && json.error
+            ? json.error
+            : 'Something went wrong. Please try again or email directly.';
+        setError(msg);
       }
     } catch {
       setError('Network error. Please try again or email directly.');
@@ -72,7 +91,7 @@ export default memo(function AuditFooterSection() {
     'w-full bg-white/[0.03] border border-white/[0.08] focus:border-gold/60 focus:bg-white/[0.05] text-white font-grotesk font-light text-base py-4 px-5 rounded-xl outline-none transition-all duration-300 placeholder:text-white/20';
 
   return (
-    <section ref={sectionRef} id="contact" className="relative py-32 md:py-44 bg-black">
+    <section ref={sectionRef} id="contact" className="relative py-24 sm:py-32 md:py-44 bg-black">
       <div className="section-divider absolute top-0 inset-x-0" />
 
       {/* Gold gradient glow */}
@@ -84,7 +103,7 @@ export default memo(function AuditFooterSection() {
         }}
       />
 
-      <div className="max-w-6xl mx-auto px-6 relative z-10">
+      <div className="max-w-6xl mx-auto pl-[max(1.25rem,env(safe-area-inset-left))] pr-[max(1.25rem,env(safe-area-inset-right))] sm:px-6 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 items-start gap-12 lg:gap-20">
           {/* Left - Copy */}
           <div>
@@ -150,7 +169,7 @@ export default memo(function AuditFooterSection() {
           {/* Right - Form */}
           <div className="reveal-audit">
             {submitted ? (
-              <div className="glass-surface-strong rounded-2xl p-8 md:p-10 min-h-[480px] flex flex-col items-center justify-center text-center">
+              <div className="glass-surface-strong rounded-2xl p-8 md:p-10 min-h-[min(72dvh,520px)] sm:min-h-[420px] flex flex-col items-center justify-center text-center">
                 <div className="w-16 h-16 bg-gold/[0.08] border border-gold/20 rounded-full flex items-center justify-center mb-6">
                   <svg
                     className="w-8 h-8 text-gold"
@@ -177,8 +196,32 @@ export default memo(function AuditFooterSection() {
             ) : (
               <form
                 onSubmit={handleSubmit}
-                className="glass-surface-strong rounded-2xl p-7 md:p-9 min-h-[480px] flex flex-col"
+                className="relative glass-surface-strong rounded-2xl p-6 sm:p-7 md:p-9 min-h-[min(72dvh,520px)] sm:min-h-[420px] flex flex-col"
               >
+                {!FORMSPREE_ID && (
+                  <p className="mb-4 rounded-xl border border-gold/25 bg-gold/[0.06] px-4 py-3 font-grotesk text-sm text-white/70">
+                    To receive submissions here, add{' '}
+                    <code className="text-gold/90">VITE_FORMSPREE_ID</code> in
+                    Vercel env vars (from{' '}
+                    <a
+                      href="https://formspree.io"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gold underline underline-offset-2 hover:text-gold-hover"
+                    >
+                      Formspree
+                    </a>
+                    ). Until then, use{' '}
+                    <a
+                      href={`mailto:${CONTACT_EMAIL}?subject=Quick%20audit%20request`}
+                      className="text-gold underline underline-offset-2 hover:text-gold-hover"
+                    >
+                      {CONTACT_EMAIL}
+                    </a>
+                    .
+                  </p>
+                )}
+
                 {/* Gold accent */}
                 <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
 
@@ -204,6 +247,8 @@ export default memo(function AuditFooterSection() {
                 </div>
 
                 <div className="space-y-4 flex-1">
+                  <input type="hidden" name="_subject" value="Quick audit — Race Digital" />
+
                   <div>
                     <label className="font-grotesk font-medium text-white/50 text-[11px] tracking-[0.2em] uppercase mb-2 block">
                       Your Name <span className="text-gold/60">*</span>
@@ -278,10 +323,14 @@ export default memo(function AuditFooterSection() {
 
                 <button
                   type="submit"
-                  disabled={submitting}
-                  className="mt-6 w-full font-grotesk font-medium text-black bg-gold hover:bg-gold-hover text-[15px] tracking-wide py-4.5 rounded-full transition-all duration-300 hover:shadow-glow-lg disabled:opacity-60 disabled:cursor-not-allowed"
+                  disabled={submitting || !FORMSPREE_ID}
+                  className="mt-6 w-full font-grotesk font-medium text-black bg-gold hover:bg-gold-hover text-[15px] tracking-wide py-4 min-h-[48px] rounded-full transition-all duration-300 hover:shadow-glow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none inline-flex items-center justify-center"
                 >
-                  {submitting ? 'Sending...' : 'Get my free audit'}
+                  {submitting
+                    ? 'Sending...'
+                    : FORMSPREE_ID
+                      ? 'Get my free audit'
+                      : 'Connect form to submit'}
                 </button>
               </form>
             )}

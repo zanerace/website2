@@ -43,12 +43,41 @@
     overflow-x: clip;
   }
 
+  /* In-page anchors: clear fixed nav (5rem ≈ 80px) */
+  #hero,
+  #services,
+  #process,
+  #pricing,
+  #contact {
+    scroll-margin-top: 5rem;
+  }
+
+  @media (min-width: 1024px) {
+    #hero,
+    #services,
+    #process,
+    #pricing,
+    #contact {
+      scroll-margin-top: 5.5rem;
+    }
+  }
+
   body {
     @apply bg-black text-white antialiased;
     font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
     font-feature-settings: 'ss01', 'cv11';
     text-rendering: optimizeLegibility;
     line-height: 1.6;
+    padding-left: env(safe-area-inset-left, 0);
+    padding-right: env(safe-area-inset-right, 0);
+  }
+
+  #root {
+    isolation: isolate;
+    min-height: 100dvh;
+    width: 100%;
+    max-width: min(100vw, 2560px);
+    margin-inline: auto;
   }
 
   html.lenis,

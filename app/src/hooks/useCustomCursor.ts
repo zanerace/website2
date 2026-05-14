@@ -10,6 +10,8 @@ export function useCustomCursor() {
   const targetRef = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     if (isTouchDevice) return;
 
     const cursor = document.createElement('div');

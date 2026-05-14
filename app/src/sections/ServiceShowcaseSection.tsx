@@ -2,6 +2,7 @@ import { useRef, useEffect, lazy, Suspense, memo } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
+import { usePrefersReducedMotion } from '../hooks/useViewportPreferences';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -85,8 +86,10 @@ export default memo(function ServiceShowcaseSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const scrollSpeedRef = useRef(0);
   const lastScrollRef = useRef(0);
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
+    if (prefersReducedMotion) return;
     let dampenId: number;
     const onScroll = () => {
       const currentScroll = window.scrollY;
@@ -104,7 +107,7 @@ export default memo(function ServiceShowcaseSection() {
       window.removeEventListener('scroll', onScroll);
       cancelAnimationFrame(dampenId);
     };
-  }, []);
+  }, [prefersReducedMotion]);
 
   useGSAP(
     () => {
@@ -137,27 +140,36 @@ export default memo(function ServiceShowcaseSection() {
     <section
       ref={sectionRef}
       id="services"
-      className="relative py-32 md:py-44 bg-black overflow-hidden"
+      className="relative py-24 sm:py-32 md:py-44 bg-black overflow-hidden"
     >
       {/* Section divider */}
       <div className="section-divider absolute top-0 inset-x-0" />
 
-      {/* Three.js Carousel Background — lazy loaded */}
+      {/* Background: WebGL carousel or lightweight static fallback */}
       <div className="absolute inset-0 z-0">
-        <Suspense fallback={null}>
-          <CarouselCanvas scrollSpeedRef={scrollSpeedRef} />
-        </Suspense>
+        {!prefersReducedMotion ? (
+          <Suspense fallback={null}>
+            <CarouselCanvas scrollSpeedRef={scrollSpeedRef} />
+          </Suspense>
+        ) : (
+          <div
+            className="absolute inset-0 bg-gradient-to-br from-zinc-950 via-black to-black"
+            aria-hidden
+          />
+        )}
       </div>
 
-      {/* Reduced overlay — let more of the carousel show */}
-      <div className="absolute inset-0 z-[1] bg-black/55" />
+      {/* Overlay — slightly stronger when no WebGL so panels stay readable */}
+      <div
+        className={`absolute inset-0 z-[1] ${prefersReducedMotion ? 'bg-black/75' : 'bg-black/55'}`}
+      />
 
       {/* Content */}
-      <div className="relative z-10 px-6">
+      <div className="relative z-10 pl-[max(1.25rem,env(safe-area-inset-left))] pr-[max(1.25rem,env(safe-area-inset-right))] sm:px-6">
         <div className="max-w-6xl mx-auto">
           {/* Problems panel */}
-          <div className="flex items-center justify-center min-h-[60vh] mb-20">
-            <div className="glass-surface-strong rounded-2xl p-8 md:p-12 max-w-2xl w-full">
+          <div className="flex items-center justify-center min-h-[min(70dvh,560px)] sm:min-h-[60vh] mb-16 sm:mb-20">
+            <div className="glass-surface-strong rounded-2xl p-6 sm:p-8 md:p-12 max-w-2xl w-full">
               <div className="reveal-item flex items-center gap-3 mb-6">
                 <span className="font-grotesk text-[11px] tracking-[0.3em] text-gold font-medium">
                   03

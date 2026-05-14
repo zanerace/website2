@@ -2,6 +2,7 @@ import { useRef, useMemo } from 'react';
 import { Canvas, useFrame, useLoader } from '@react-three/fiber';
 import * as THREE from 'three';
 import { TextureLoader } from 'three';
+import { useResponsiveCanvasDpr } from '../hooks/useViewportPreferences';
 
 const IMAGES = [
   '/images/carousel-1.jpg',
@@ -190,18 +191,24 @@ function CarouselScene({
   );
 }
 
-const maxDpr = Math.min(window.devicePixelRatio, 1.5);
-
 export default function CarouselCanvas({
   scrollSpeedRef,
 }: {
   scrollSpeedRef: React.MutableRefObject<number>;
 }) {
+  const maxDpr = useResponsiveCanvasDpr();
+
   return (
     <Canvas
       camera={{ position: [0, 0, 5], fov: 50 }}
       dpr={[1, maxDpr]}
-      gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
+      gl={{
+        antialias: false,
+        alpha: true,
+        powerPreference: 'high-performance',
+        stencil: false,
+        depth: true,
+      }}
       style={{ background: 'transparent' }}
     >
       <CarouselScene scrollSpeedRef={scrollSpeedRef} />
