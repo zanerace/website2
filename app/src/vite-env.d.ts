@@ -1,7 +1,8 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-  readonly VITE_FORMSPREE_ID: string;
+  /** Formspree form hash (e.g. mbdweard); optional — app defaults to production id */
+  readonly VITE_FORMSPREE_ID?: string;
   readonly VITE_CONTACT_EMAIL?: string;
 }
 
